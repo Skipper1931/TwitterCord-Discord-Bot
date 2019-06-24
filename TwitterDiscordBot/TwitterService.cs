@@ -10,7 +10,11 @@ using Tweetinvi.Models;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Diagnostics;
-
+using Tweetinvi.Parameters;
+using System.Net;
+using System.Drawing.Imaging;
+using System.Drawing;
+using System.IO;
 
 namespace TwitterDiscordBot
 {
@@ -52,14 +56,31 @@ namespace TwitterDiscordBot
             }
         }
 
-        public static async Task<string> PostMessage(ulong userID, string message)
+        public static async Task<string> PostMessage(ulong userID, string message, string attatchmentURL = null, string filetype = null)
         {
             if (!Credentials.Keys.Contains(userID))
             {
                 return "You need to link your account first.";
             }
+            else if (attatchmentURL != null)
+            {
+                using (WebClient webClient = new WebClient())
+                {
+                    webClient.DownloadFile(attatchmentURL, @"image" + userID + $".{filetype}");
+                }
 
-            return $"Tweeted! {Credentials[userID].PublishTweet(message).Url}";
+                byte[] tempImage = File.ReadAllBytes(@"image" + userID + $".{filetype}");
+                var attatchment = Upload.UploadBinary(tempImage);
+
+                PublishTweetOptionalParameters parameters = new PublishTweetOptionalParameters();
+                parameters.Medias = new List<IMedia> { attatchment };
+                File.Delete(@"image" + userID + $".{filetype}");
+                return $"Tweeted! {Credentials[userID].PublishTweet(message, parameters).Url}";
+            }
+            else
+            {
+                return $"Tweeted! {Credentials[userID].PublishTweet(message).Url}";
+            }
         }
 
         public static async Task<string> GetFeed(ulong userID, int amount)
@@ -71,7 +92,7 @@ namespace TwitterDiscordBot
             IEnumerable<ITweet> _feed = await Credentials[userID].GetHomeTimelineAsync(amount);
             string feed = "";
 
-            foreach(ITweet post in _feed)
+            foreach (ITweet post in _feed)
             {
                 feed += $"**{post.CreatedBy.UserDTO.Name}:** {post.Text}\n";
             }

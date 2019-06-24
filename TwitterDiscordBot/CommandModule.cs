@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace TwitterDiscordBot
 {
@@ -19,7 +21,7 @@ namespace TwitterDiscordBot
 
         [Command("tweet")]
         [Alias("post")]
-        [Summary("Tweets something to Twitter. You must first link your twitter account.")]
+        [Summary("Tweets something to Twitter. You must first link your twitter account. Supports .png and .jpg image attatchments.")]
         public async Task TweetAsync([Remainder] string message)
         {
             if (message.Length > 280)
@@ -28,7 +30,23 @@ namespace TwitterDiscordBot
             }
             else
             {
-                await ReplyAsync(await TwitterService.PostMessage(Context.Message.Author.Id, message));
+                string attatchmentURL = null;
+                string attatchementFileType = null;
+                if (Context.Message.Attachments.Any() == true)
+                {
+                    IUserMessage _message = Context.Message;
+                    var attachment = _message.Attachments.First();
+                    if (attachment.Filename.Contains(".png"))
+                    {
+                        attatchementFileType = "png";
+                    }
+                    else if (attachment.Filename.Contains(".jpg"))
+                    {
+                        attatchementFileType = "jpg";
+                    }
+                    attatchmentURL = attachment.Url;
+                }
+                await ReplyAsync(await TwitterService.PostMessage(Context.Message.Author.Id, message, attatchmentURL));
             }
         }
 
@@ -67,7 +85,7 @@ namespace TwitterDiscordBot
         [Summary("Displays all available commands")]
         public async Task HelpAsync()
         {
-            await ReplyAsync("**!ping** -- Pings the bot.\n**!login** -- Logs a Twitter user into the bot.\n**!pin** -- Retreives the Twitter authentication PIN to complete the login process. Do not run this command in a public channel, as it puts your Twitter account at risk. Parameters: <Authenication PIN>\n**!tweet** -- Tweets something to Twitter. You must first link your twitter account. Parameters: <Message>\n**!feed** -- Displays the last 7 posts on your timeline. Parameters: <Number of Tweets>");
+            await ReplyAsync("**!ping** -- Pings the bot.\n**!login** -- Logs a Twitter user into the bot.\n**!pin** -- Retreives the Twitter authentication PIN to complete the login process. Do not run this command in a public channel, as it puts your Twitter account at risk. Parameters: <Authenication PIN>\n**!tweet** -- Tweets something to Twitter. You must first link your twitter account. Supports .png and .jpg image attatchments. Parameters: <Message>\n**!feed** -- Displays the last 7 posts on your timeline. Parameters: <Number of Tweets>");
         }
     }
 }
