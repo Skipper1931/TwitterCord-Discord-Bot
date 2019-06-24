@@ -54,9 +54,30 @@ namespace TwitterDiscordBot
 
         public static async Task<string> PostMessage(ulong userID, string message)
         {
-            return Credentials[userID].PublishTweet(message).Url;
+            if (!Credentials.Keys.Contains(userID))
+            {
+                return "You need to link your account first.";
+            }
+
+            return $"Tweeted! {Credentials[userID].PublishTweet(message).Url}";
         }
 
+        public static async Task<string> GetFeed(ulong userID, int amount)
+        {
+            if (!Credentials.Keys.Contains(userID))
+            {
+                return "You need to link your account first.";
+            }
+            IEnumerable<ITweet> _feed = await Credentials[userID].GetHomeTimelineAsync(amount);
+            string feed = "";
+
+            foreach(ITweet post in _feed)
+            {
+                feed += $"**{post.CreatedBy.UserDTO.Name}:** {post.Text}\n";
+            }
+
+            return feed;
+        }
     }
 
 }
