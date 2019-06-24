@@ -36,14 +36,14 @@ namespace TwitterDiscordBot
                 {
                     IUserMessage _message = Context.Message;
                     var attachment = _message.Attachments.First();
-                    if (attachment.Filename.Contains(".png"))
+                    /*if (attachment.Filename.Contains(".png"))
                     {
                         attatchementFileType = "png";
                     }
                     else if (attachment.Filename.Contains(".jpg"))
                     {
                         attatchementFileType = "jpg";
-                    }
+                    }*/
                     attatchmentURL = attachment.Url;
                 }
                 await ReplyAsync(await TwitterService.PostMessage(Context.Message.Author.Id, message, attatchmentURL));

@@ -56,7 +56,7 @@ namespace TwitterDiscordBot
             }
         }
 
-        public static async Task<string> PostMessage(ulong userID, string message, string attatchmentURL = null, string filetype = null)
+        public static async Task<string> PostMessage(ulong userID, string message, string attatchmentURL = null)
         {
             if (!Credentials.Keys.Contains(userID))
             {
@@ -66,15 +66,15 @@ namespace TwitterDiscordBot
             {
                 using (WebClient webClient = new WebClient())
                 {
-                    webClient.DownloadFile(attatchmentURL, @"image" + userID + $".{filetype}");
+                    webClient.DownloadFile(attatchmentURL, @"image" + userID);
                 }
 
-                byte[] tempImage = File.ReadAllBytes(@"image" + userID + $".{filetype}");
+                byte[] tempImage = File.ReadAllBytes(@"image" + userID);
                 var attatchment = Upload.UploadBinary(tempImage);
 
                 PublishTweetOptionalParameters parameters = new PublishTweetOptionalParameters();
                 parameters.Medias = new List<IMedia> { attatchment };
-                File.Delete(@"image" + userID + $".{filetype}");
+                File.Delete(@"image" + userID);
                 return $"Tweeted! {Credentials[userID].PublishTweet(message, parameters).Url}";
             }
             else
