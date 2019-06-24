@@ -16,12 +16,6 @@ namespace TwitterDiscordBot
 {
     public static class TwitterService
     {
-
-
-        private static readonly HttpClient client = new HttpClient();
-
-        private const string callbackURL = "http://www.skipper1931.com/oauthcallback";
-
         private static Dictionary<ulong, IAuthenticatedUser> Credentials = new Dictionary<ulong, IAuthenticatedUser>();
         // Discord User ID, Twitter Account Credentials
 
