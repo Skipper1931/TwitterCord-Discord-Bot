@@ -15,3 +15,7 @@ You can add this bot to your server with this link: https://discordapp.com/api/o
 **!feed** -- Displays the last 7 posts on your timeline. Parameters: <Number of Tweets>
 
 **!follow** -- Follows another user. Parameters: <Username>
+
+# Notes
+* Do not expect consistant uptime for the bot. I will be away for a bit and won't be able to keep the bot running.
+* This bot wasn't extensively tested, and as such may have bugs. There are a couple of known bugs regarding tweets, but they can usually be fixed by using the command again.
