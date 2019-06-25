@@ -99,6 +99,37 @@ namespace TwitterDiscordBot
 
             return feed;
         }
+
+        public static async Task<string> Follow(ulong userID, string username)
+        {
+            try
+            {
+                if (!Credentials.Keys.Contains(userID))
+                {
+                    return "You need to link your account first.";
+
+                }
+
+                var user = Credentials[userID];
+
+                var relationshipDetails = user.GetRelationshipWith(username);
+
+                if (relationshipDetails.Following == true)
+                {
+                    return "You are already following this account.";
+                }
+                else
+                {
+                    await user.FollowUserAsync(username);
+                    return $"Successfully followed {username}";
+                }
+            }
+            catch (System.NullReferenceException)
+            {
+                return "Invalid username";
+            }
+            
+        }
     }
 
 }

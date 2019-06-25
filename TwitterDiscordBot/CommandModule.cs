@@ -31,19 +31,11 @@ namespace TwitterDiscordBot
             else
             {
                 string attatchmentURL = null;
-                string attatchementFileType = null;
                 if (Context.Message.Attachments.Any() == true)
                 {
                     IUserMessage _message = Context.Message;
                     var attachment = _message.Attachments.First();
-                    /*if (attachment.Filename.Contains(".png"))
-                    {
-                        attatchementFileType = "png";
-                    }
-                    else if (attachment.Filename.Contains(".jpg"))
-                    {
-                        attatchementFileType = "jpg";
-                    }*/
+
                     attatchmentURL = attachment.Url;
                 }
                 await ReplyAsync(await TwitterService.PostMessage(Context.Message.Author.Id, message, attatchmentURL));
@@ -79,6 +71,13 @@ namespace TwitterDiscordBot
             {
                 await ReplyAsync(await TwitterService.GetFeed(Context.Message.Author.Id, NumberOfPosts));
             }
+        }
+
+        [Command("follow")]
+        [Summary("Follows another user")]
+        public async Task FollowAsync(string username)
+        {
+            await ReplyAsync(await TwitterService.Follow(Context.Message.Author.Id, username));
         }
 
         [Command("help")]
