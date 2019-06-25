@@ -74,7 +74,7 @@ namespace TwitterDiscordBot
         }
 
         [Command("follow")]
-        [Summary("Follows another user")]
+        [Summary("Follows another user.")]
         public async Task FollowAsync(string username)
         {
             await ReplyAsync(await TwitterService.Follow(Context.Message.Author.Id, username));
@@ -84,7 +84,7 @@ namespace TwitterDiscordBot
         [Summary("Displays all available commands")]
         public async Task HelpAsync()
         {
-            await ReplyAsync("**!ping** -- Pings the bot.\n**!login** -- Logs a Twitter user into the bot.\n**!pin** -- Retreives the Twitter authentication PIN to complete the login process. Do not run this command in a public channel, as it puts your Twitter account at risk. Parameters: <Authenication PIN>\n**!tweet** -- Tweets something to Twitter. You must first link your twitter account. Supports .png and .jpg image attatchments. Parameters: <Message>\n**!feed** -- Displays the last 7 posts on your timeline. Parameters: <Number of Tweets>");
+            await ReplyAsync("**!ping** -- Pings the bot.\n**!login** -- Logs a Twitter user into the bot.\n**!pin** -- Retreives the Twitter authentication PIN to complete the login process. Do not run this command in a public channel, as it puts your Twitter account at risk. Parameters: <Authenication PIN>\n**!tweet** -- Tweets something to Twitter. You must first link your twitter account. Supports .png and .jpg image attatchments. Parameters: <Message>\n**!feed** -- Displays the last 7 posts on your timeline. Parameters: <Number of Tweets>\n**!follow** -- Follows another user. Parameters: <Username>");
         }
     }
 }
